@@ -1,43 +1,43 @@
-import sqlite3
+from database_utils import DatabaseUtils
 
 
 class DatabaseManager:
-    def __init__(self, db_path: str):
-        self.connection = sqlite3.connect(db_path)
-        self.cur = self.connection.cursor()
+    def __init__(self):
+        self.dbu = DatabaseUtils("data/bookshelf.db")
+        self.dbu.create_table('author',
+                              {'id': ['INTEGER ', 'PRIMARY KEY', 'AUTOINCREMENT', 'UNIQUE'],
+                               'name': ['TEXT']})
+        print(self.dbu.select('author'))
+        self.dbu.create_table('book_author_relation',
+                              {'id': ['INTEGER '],
+                               'author_id': ['INTEGER '],
+                               'book_id': ['INTEGER '],
+                               'FOREIGN KEY(author_id)': ['REFERENCES author(id)'],
+                               'FOREIGN KEY(book_id)': ['REFERENCES book(id)']
+                               })
+        print(self.dbu.select('book_author_relation'))
 
-    def close(self):
-        """close sqlite3 connection"""
-        self.connection.close()
+        self.dbu.create_table('book', {'id': ['INTEGER ', 'PRIMARY KEY', 'AUTOINCREMENT', 'UNIQUE'],
+                                       'isbn': ['TEXT', 'UNIQUE'],
+                                       'title': ['TEXT'],
+                                       'book_author_relation': ['INTEGER '],
+                                       'description': ['TEXT'],
+                                       'language': ['TEXT'],
+                                       'year': ['INTEGER']})
+        print(self.dbu.select('book'))
 
-    def execute(self, query: str):
-        """execute a row of data to current cursor"""
-        self.cur.execute(query)
+        self.dbu.close()
 
-    def insert(self, table, values):
-        """add many new data to database in one go"""
-        self.create_table()
-        query = 'INSERT INTO ' + table + ' VALUES'
-        for value in range(len(values) - 1):
-            query += values + ','
-        query += values[-1] + ')'
-        print(query)
-        self.cur.executemany(query, values)
+    def add_item(self, table, values) -> int:
+        """
+        :param table:
+        :param values:
+        :return: id of inserted row
+        """
+        self.dbu.insert(table, values)
+        return self.dbu.cursor.lastrowid
 
-    def create_table(self, table_name: str, table_dict: dict):
-        """create a database table if it does not exist already"""
-        # TO-DO
-        """table_dict must be formalised like this : {'attribute1':[type,constraints,...]}"""
-        query = "CREATE TABLE IF NOT EXISTS " + table_name + "("
-        for key, values in table_dict.items():
-            query += key + ' '
-            for value in values:
-                query += value + ' '
-            pass
-        query += ")"
-        print(query)
-        self.cur.execute(query)
-
-    def commit(self):
-        """commit changes to database"""
-        self.connection.commit()
+    def display_db(self):
+        print(self.dbu.select('author'))
+        print(self.dbu.select('book'))
+        print(self.dbu.select('book_author_relation'))

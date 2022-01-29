@@ -1,7 +1,13 @@
-from book_finder import BookFinder
+from book import Book
+from database_manager import DatabaseManager
 from isbn_extractor import IsbnExtractor
 
 if __name__ == '__main__':
-    all_isbns=IsbnExtractor.extract_from_file("resources/ScannedBooks.csv")
+    dmc = DatabaseManager()
+    books = []
+    all_isbns = IsbnExtractor.extract_from_file("resources/ScannedBooks.csv")
     for isbn in all_isbns:
-        BookFinder.find_by_isbn(isbn)
+        books.append(Book(isbn))
+
+    """
+    """
