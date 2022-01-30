@@ -8,6 +8,6 @@ if __name__ == '__main__':
     all_isbns = IsbnExtractor.extract_from_file("resources/ScannedBooks.csv")
     for isbn in all_isbns:
         books.append(Book(isbn))
-
+        print(books[-1])
     """
     """

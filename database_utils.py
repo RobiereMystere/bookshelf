@@ -27,7 +27,6 @@ class DatabaseUtils:
         if type(v) == str:
             v = '"' + v + '"'
         query += str(v) + ')'
-        print(query)
         self.execute(query)
 
     def create_table(self, table_name: str, table_dict: dict):
@@ -40,12 +39,23 @@ class DatabaseUtils:
                 query += value + ' '
             query += ', '
         query = query[:-2] + ")"
-        print(query)
         self.cursor.execute(query)
 
-    def select(self, table, column='*'):
-        self.cursor.execute("SELECT " + column + " FROM " + table)
+    def select(self, table, column='*', where=""):
+        query = "SELECT " + column + " FROM " + table
+        if where != "":
+            query += " WHERE " + where
+        query += ";"
+        self.cursor.execute(query)
         return self.cursor.fetchall()
+
+    def select_one(self, table, column='*', where=""):
+        query = "SELECT " + column + " FROM " + table
+        if where != "":
+            query += " WHERE " + where
+        query += ";"
+        self.cursor.execute(query)
+        return self.cursor.fetchone()
 
     def last_id(self, table):
         self.cursor.execute("SELECT * FROM " + table + " ORDER BY id DESC LIMIT 1")
