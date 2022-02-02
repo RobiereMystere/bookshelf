@@ -42,7 +42,11 @@ class Book:
             self.language = data['Language']
             self.year = data['Year']
             dbu.insert('book',
-                       [dbu.last_id("book") + 1, self.isbn, self.title, self.book_author_relation_id, self.description,
+                       [dbu.last_id("book") + 1,
+                        self.isbn,
+                        self.title,
+                        self.book_author_relation_id,
+                        self.description,
                         self.language,
                         self.year])
             dbu.commit()
@@ -74,3 +78,12 @@ class Book:
     @staticmethod
     def find_by_isbn(isbn) -> dict:
         return meta(canonical(isbn))
+
+
+def escape_special_characters(string):
+    for special_character in ('\\', '_', '%', '/', "'", "\""):
+        string = string.replace(
+            special_character,
+            r'\{}'.format(special_character)
+        )
+    return string

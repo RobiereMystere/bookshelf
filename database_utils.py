@@ -13,25 +13,18 @@ class DatabaseUtils:
         """close sqlite3 connection"""
         self.connection.close()
 
-    def execute(self, query: str):
+    def execute(self, query: str, values: list):
         """execute a row of data to current cursor"""
-        self.cursor.execute(query)
+        self.cursor.execute(query, values)
 
     def insert(self, table: str, values: list):
         """add many new data to database in one go"""
-        query = 'INSERT INTO ' + table + ' VALUES ('
-        for value in values[:-1]:
-            v = value
+        query = 'INSERT INTO ' + table + ' VALUES (' + ("?," * len(values))
+        query = query[:-1] + ');'
 
-            if type(v) == str:
-                v = '"' + v + '"'
-            query += str(v) + ','
-        v = values[-1]
-        if type(v) == str:
-            v = '"' + v + '"'
-        query += str(v) + ')'
         log(query)
-        self.execute(query)
+        log(values)
+        self.execute(query, values)
 
     def create_table(self, table_name: str, table_dict: dict):
         """create a database table if it does not exist already"""
