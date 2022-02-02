@@ -17,6 +17,7 @@ class Book:
         data_book = dbu.select_one('book', '*', "isbn = " + isbn)
         self.authors = []
         if data_book is None:
+
             data = Book.find_by_isbn(isbn)
             self.book_id = 1 + dbu.last_id('book')
             self.isbn = isbn

@@ -1,4 +1,5 @@
 import sqlite3
+from loglib import log
 
 DB_PATH = "django/bookshelf/bookshelf.db"
 
@@ -29,7 +30,7 @@ class DatabaseUtils:
         if type(v) == str:
             v = '"' + v + '"'
         query += str(v) + ')'
-        print(query)
+        log(query)
         self.execute(query)
 
     def create_table(self, table_name: str, table_dict: dict):
@@ -57,6 +58,7 @@ class DatabaseUtils:
         if where != "":
             query += " WHERE " + where
         query += ";"
+        log(query)
         self.cursor.execute(query)
         return self.cursor.fetchone()
 

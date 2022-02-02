@@ -31,7 +31,7 @@ ALLOWED_HOSTS = ['localhost','192.168.1.132']
 # Application definition
 
 INSTALLED_APPS = [
-    'isbn_scanner.apps.IsbnScannerConfig',
+    'book_collection.apps.BookCollectionConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
