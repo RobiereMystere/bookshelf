@@ -1,0 +1,11 @@
+<input type="file" name="image" accept="image/*" capture="user">
+
+{% if authors %}
+    <ul>
+    {% for author in authors %}
+        <li><a href="/scanner/authors{{ author.id }}/">{{ author.name }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No authors are available.</p>
+{% endif %}
