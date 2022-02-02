@@ -1,9 +1,11 @@
 import sqlite3
 
+DB_PATH = "django/bookshelf/bookshelf.db"
+
 
 class DatabaseUtils:
-    def __init__(self, db_path: str):
-        self.connection = sqlite3.connect(db_path)
+    def __init__(self):
+        self.connection = sqlite3.connect(DB_PATH)
         self.cursor = self.connection.cursor()
 
     def close(self):
@@ -27,6 +29,7 @@ class DatabaseUtils:
         if type(v) == str:
             v = '"' + v + '"'
         query += str(v) + ')'
+        print(query)
         self.execute(query)
 
     def create_table(self, table_name: str, table_dict: dict):

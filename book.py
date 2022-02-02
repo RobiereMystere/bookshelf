@@ -13,7 +13,7 @@ class Book:
     authors: list
 
     def __init__(self, isbn):
-        dbu = DatabaseUtils("data/bookshelf.db")
+        dbu = DatabaseUtils()
         data_book = dbu.select_one('book', '*', "isbn = " + isbn)
         self.authors = []
         if data_book is None:
@@ -21,7 +21,6 @@ class Book:
             self.book_id = 1 + dbu.last_id('book')
             self.isbn = isbn
             self.title = data['Title']
-            self.book_author_relation_id = dbu.last_id("book_author_relation") + 1
             for author in data['Authors']:
                 t_author = author
                 if len(t_author) > 0 and t_author[-1] == ',':
@@ -33,6 +32,8 @@ class Book:
                     author_id = dbu.cursor.lastrowid
                 else:
                     author_id = author_id[0]
+                self.book_author_relation_id = dbu.last_id("book_author_relation") + 1
+
                 dbu.insert('book_author_relation',
                            [self.book_author_relation_id, author_id,
                             self.book_id])
@@ -49,7 +50,7 @@ class Book:
             self.isbn = data_book[1]
             self.title = data_book[2]
             self.book_author_relation_id = data_book[3]
-            author_ids = dbu.select('book_author_relation', 'author_id', 'id = ' + str(self.book_author_relation_id))
+            author_ids = dbu.select('book_author_relation', 'author_id_id', 'id = ' + str(self.book_author_relation_id))
             for author_id in author_ids:
                 author_tuple = dbu.select_one('author', '*', 'id = ' + str(author_id[0]))
                 self.authors.append(Author(author_tuple[0], author_tuple[1]))

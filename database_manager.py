@@ -3,7 +3,7 @@ from database_utils import DatabaseUtils
 
 class DatabaseManager:
     def __init__(self):
-        self.dbu = DatabaseUtils("data/bookshelf.db")
+        self.dbu = DatabaseUtils()
         self.dbu.create_table('author',
                               {'id': ['INTEGER ', 'PRIMARY KEY', 'AUTOINCREMENT', 'UNIQUE'],
                                'name': ['TEXT']})
